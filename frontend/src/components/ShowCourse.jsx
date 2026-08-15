@@ -7,6 +7,8 @@ const ShowCourse = () => {
     const { id } = useParams();
     const navigate = useNavigate();
 
+    const user = JSON.parse(localStorage.getItem("user"));
+
     useEffect(() => {
         axios
             .get(`http://localhost:4000/course/course/${id}`)
@@ -14,12 +16,39 @@ const ShowCourse = () => {
             .catch((err) => console.log(err));
     }, [id]);
 
-    const handleDelete = () => {
-        axios
-            .delete(`http://localhost:4000/course/${id}`)
-            .then(() => navigate("/"))
-            .catch((err) => console.log(err));
-    };
+   const handleDelete = () => {
+    const confirmDelete = window.confirm(
+        "Are you sure you want to delete this course?"
+    );
+
+    if (!confirmDelete) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+
+    axios
+        .delete(
+            `http://localhost:4000/course/${id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        .then(() => {
+            navigate("/");
+        })
+        .catch((err) => {
+            if (err.response?.status === 401) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                navigate("/login");
+            } else {
+                console.log(err);
+            }
+        });
+};
 
     return (
         <>
@@ -32,7 +61,10 @@ const ShowCourse = () => {
                                 className="card-img-top"
                                 src={course.c_thumbnail}
                                 alt={course.c_name}
-                                style={{ height: "350px", objectFit: "cover" }}
+                                style={{
+                                    height: "350px",
+                                    objectFit: "cover"
+                                }}
                             />
 
                             <div className="card-body">
@@ -64,20 +96,24 @@ const ShowCourse = () => {
                                     Back To Home
                                 </NavLink>
 
-                                <NavLink
-                                    className="btn btn-warning me-3"
-                                    to={`/edit/${id}`}
-                                >
-                                    Edit
-                                </NavLink>
+                                {user?.role === "admin" && (
+                                    <>
+                                        <NavLink
+                                            className="btn btn-warning me-3"
+                                            to={`/edit/${id}`}
+                                        >
+                                            Edit
+                                        </NavLink>
 
-                                <button
-                                    type="button"
-                                    className="btn btn-danger"
-                                    onClick={handleDelete}
-                                >
-                                    Delete
-                                </button>
+                                        <button
+                                            type="button"
+                                            className="btn btn-danger"
+                                            onClick={handleDelete}
+                                        >
+                                            Delete
+                                        </button>
+                                    </>
+                                )}
 
                             </div>
                         </div>

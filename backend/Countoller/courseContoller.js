@@ -30,7 +30,7 @@ exports.updateCourse = async (req, res) => {
     res.status(200).json({ message: 'course updated successfully...' })
 }
 
-exports.delCourse = async (req, res) => {
+exports.deleteCourse = async (req, res) => {
     const course = await courseModel.findByIdAndDelete(req.params.id)
     if (course != null) {
         res.status(200).json({ message: 'Course deleted successfully...' })

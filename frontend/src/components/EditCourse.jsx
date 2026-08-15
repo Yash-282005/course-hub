@@ -20,16 +20,36 @@ const EditCourse = () => {
       .get(`http://localhost:4000/course/course/${id}`)
       .then((res) => setCourse(res.data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem("token");
+
     axios
-      .put(`http://localhost:4000/course/${id}`, course)
-      .then(() => navigate(`/show/${id}`))
-      .catch((err) => console.log(err));
-  };
+        .put(
+            `http://localhost:4000/course/${id}`,
+            course,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        .then(() => {
+            navigate(`/show/${id}`);
+        })
+        .catch((err) => {
+            if (err.response?.status === 401) {
+                localStorage.removeItem("token");
+                localStorage.removeItem("user");
+                navigate("/login");
+            } else {
+                console.log(err);
+            }
+        });
+};
 
   return (
     <>
