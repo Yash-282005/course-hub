@@ -8,7 +8,10 @@ import ShowCourse from './components/ShowCourse';
 import EditCourse from './components/EditCourse';
 import Register from './components/Register';
 import Login from './components/Login';
-import ProtectedRoute from "./Components/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ForgotPassword from './components/ForgotPassword';
+import ResetPassword from './components/ResetPassword';
+import MyCourses from "./components/MyCourses";
 const App = () => {
   return (
     <>
@@ -54,9 +57,26 @@ const App = () => {
     path="/edit"
     element={<Navigate to="/" />}
 />  
-</Routes>
+<Route
+    path="/forgot-password"
+    element={<ForgotPassword />}
+/>
+<Route
+    path="/reset-password/:token"
+    element={<ResetPassword />}
+/>
+<Route
+    path="/my-courses"
+    element={
+        <ProtectedRoute userOnly={true}>
+            <MyCourses />
+        </ProtectedRoute>
+    }
+/>
+  </Routes>
       </BrowserRouter>
     </>
+    
   )
 }
 

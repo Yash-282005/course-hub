@@ -1,8 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 
 const Home = () => {
   const [course, setCourse] = useState([]);
@@ -11,7 +10,7 @@ const Home = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/course/")
+      .get(`${import.meta.env.VITE_API_URL}/course/`)
       .then((res) => {
         setCourse(res.data);
         setFilteredCourse(res.data);
@@ -31,78 +30,213 @@ const Home = () => {
     setFilteredCourse(result);
   };
 
+  const handleCategory = (category) => {
+    if (category === "All") {
+      setFilteredCourse(course);
+      return;
+    }
+
+    const result = course.filter(
+      (item) =>
+        item.c_category.toLowerCase() === category.toLowerCase()
+    );
+
+    setFilteredCourse(result);
+  };
+
   return (
     <>
-      <div className="container my-3">
+      <section className="bg-dark text-white py-5">
+        <div className="container py-4">
+          <div className="row align-items-center">
+            <div className="col-lg-8">
+              <span className="badge bg-primary mb-3">
+                COURSEHUB
+              </span>
 
-        <div className="input-group mb-4">
-          <input
-            type="text"
-            className="form-control"
-            placeholder="Search course"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+              <h1 className="display-4 fw-bold">
+                Learn skills that move you forward
+              </h1>
+
+              <p className="lead text-light mt-3">
+                Explore practical courses taught by experienced
+                instructors and build skills for your future.
+              </p>
+
+              <div className="input-group input-group-lg mt-4">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="What do you want to learn?"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      handleSearch();
+                    }
+                  }}
+                />
+
+                <button
+                  className="btn btn-primary px-4"
+                  onClick={handleSearch}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="container py-5">
+
+        <div className="d-flex flex-wrap gap-2 mb-5">
+          <button
+            className="btn btn-outline-primary rounded-pill"
+            onClick={() => handleCategory("All")}
+          >
+            All Courses
+          </button>
 
           <button
-            className="btn btn-primary"
-            onClick={handleSearch}
+            className="btn btn-outline-secondary rounded-pill"
+            onClick={() => handleCategory("Web Development")}
           >
-            Search
+            Web Development
+          </button>
+
+          <button
+            className="btn btn-outline-secondary rounded-pill"
+            onClick={() => handleCategory("Programming")}
+          >
+            Programming
+          </button>
+
+          <button
+            className="btn btn-outline-secondary rounded-pill"
+            onClick={() => handleCategory("Database")}
+          >
+            Database
+          </button>
+
+          <button
+            className="btn btn-outline-secondary rounded-pill"
+            onClick={() => handleCategory("Data Science")}
+          >
+            Data Science
           </button>
         </div>
 
-        <div className="row justify-content-center g-2">
+        <div className="mb-4">
+          <h2 className="fw-bold">
+            Explore our courses
+          </h2>
+
+          <p className="text-muted">
+            Choose from our growing collection of courses.
+          </p>
+        </div>
+
+        <div className="row g-4">
 
           {filteredCourse.map((course) => (
-            <div className="col-md-4 mb-4" key={course._id}>
-
-              <div className="card h-100">
+            <div
+              className="col-sm-6 col-lg-4"
+              key={course._id}
+            >
+              <div className="card h-100 border-0 shadow-sm">
 
                 <img
-                  className="card-img-top"
                   src={course.c_thumbnail}
                   alt={course.c_name}
-                  style={{ height: "250px" }}
+                  className="card-img-top"
+                  style={{
+                    height: "210px",
+                    objectFit: "cover"
+                  }}
                 />
 
-                <div className="card-body">
+                <div className="card-body d-flex flex-column">
 
-                  <h4 className="card-title">
+                  <div className="mb-2">
+                    <span className="badge bg-light text-primary">
+                      {course.c_category}
+                    </span>
+
+                    <span className="badge bg-light text-dark ms-2">
+                      {course.c_level}
+                    </span>
+                  </div>
+
+                  <h5 className="card-title fw-bold">
                     {course.c_name}
-                  </h4>
+                  </h5>
 
-                  <p className="card-text">
-                    Instructor: {course.c_insturctor}
+                  <p className="text-muted mb-2">
+                    {course.c_description}
                   </p>
 
-                  <p className="card-text">
-                    Category: {course.c_category}
+                  <p className="small text-muted mb-2">
+                    By {course.c_insturctor}
                   </p>
 
-                  <p className="card-text">
-                    Duration: {course.c_dutration}
-                  </p>
+                  <div className="d-flex align-items-center gap-2 mb-2">
+                    <span className="fw-bold text-warning">
+                      ★ {course.c_rating}
+                    </span>
 
-                  <p className="card-text">
-                    Level: {course.c_level}
-                  </p>
+                    <span className="small text-muted">
+                      ({course.c_students} students)
+                    </span>
+                  </div>
 
-                  <NavLink
-                    className="btn btn-primary"
-                    to={`/show/${course._id}`}
-                  >
-                    Read More
-                  </NavLink>
+                  <div className="small text-muted mb-3">
+                    {course.c_dutration} hours ·{" "}
+                    {course.c_lessons} lessons ·{" "}
+                    {course.c_language}
+                  </div>
+
+                  <div className="mt-auto d-flex justify-content-between align-items-center">
+
+                    <span className="fs-5 fw-bold">
+                      ₹{course.c_price}
+                    </span>
+
+                    <NavLink
+                      className="btn btn-primary"
+                      to={`/show/${course._id}`}
+                    >
+                      View Course
+                    </NavLink>
+
+                  </div>
 
                 </div>
-
               </div>
-
             </div>
           ))}
 
         </div>
+
+        {filteredCourse.length === 0 && (
+          <div className="text-center py-5">
+            <h4>No courses found</h4>
+            <p className="text-muted">
+              Try searching for another course or category.
+            </p>
+
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                setSearch("");
+                setFilteredCourse(course);
+              }}
+            >
+              View All Courses
+            </button>
+          </div>
+        )}
 
       </div>
     </>

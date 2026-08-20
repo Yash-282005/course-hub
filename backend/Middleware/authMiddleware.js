@@ -18,7 +18,7 @@ const verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, "mysecretkey");
+        const decoded = jwt.verify(token, process.env.JWT_SECRET)
 
         req.user = decoded;
 
@@ -40,7 +40,18 @@ const verifyAdmin = (req, res, next) => {
     next();
 };
 
+const verifyUser = (req, res, next) => {
+    if (req.user.role === "admin") {
+        return res.status(403).json({
+            message: "Access denied. Users only."
+        });
+    }
+
+    next();
+};
+
 module.exports = {
     verifyToken,
-    verifyAdmin
+    verifyAdmin,
+    verifyUser
 };

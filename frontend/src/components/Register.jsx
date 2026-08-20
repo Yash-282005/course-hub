@@ -9,33 +9,61 @@ const Register = () => {
         password: ""
     });
 
+    const [error, setError] = useState("");
+
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        setError("");
+
         axios
-            .post("http://localhost:4000/auth/register", user)
+            .post(`${import.meta.env.VITE_API_URL}/auth/register`, user)
             .then((res) => {
                 console.log(res.data);
                 navigate("/login");
             })
             .catch((err) => {
-                console.log(err);
+                setError(
+                    err.response?.data?.message ||
+                    "Registration failed"
+                );
             });
     };
 
     return (
-        <>
-            <div className="container my-5">
+        <div className="bg-light min-vh-100 d-flex align-items-center py-5">
+            <div className="container">
                 <div className="row justify-content-center">
-                    <div className="col-md-6">
-                        <div className="card">
-                            <div className="card-body">
+                    <div className="col-md-6 col-lg-5">
 
-                                <h4 className="card-title text-center mb-4">
-                                    Register
-                                </h4>
+                        <div className="text-center mb-4">
+                            <h2 className="fw-bold">
+                                CourseHub
+                            </h2>
+
+                            <p className="text-muted">
+                                Create your account and start learning
+                            </p>
+                        </div>
+
+                        <div className="card border-0 shadow-sm">
+                            <div className="card-body p-4 p-md-5">
+
+                                <h3 className="fw-bold mb-2">
+                                    Create an account
+                                </h3>
+
+                                <p className="text-muted mb-4">
+                                    Join CourseHub and explore new skills.
+                                </p>
+
+                                {error && (
+                                    <div className="alert alert-danger">
+                                        {error}
+                                    </div>
+                                )}
 
                                 <form onSubmit={handleSubmit}>
 
@@ -54,8 +82,9 @@ const Register = () => {
                                             }
                                             required
                                         />
+
                                         <label htmlFor="name">
-                                            Name
+                                            Full Name
                                         </label>
                                     </div>
 
@@ -74,12 +103,13 @@ const Register = () => {
                                             }
                                             required
                                         />
+
                                         <label htmlFor="email">
-                                            Email
+                                            Email Address
                                         </label>
                                     </div>
 
-                                    <div className="form-floating mb-3">
+                                    <div className="form-floating mb-4">
                                         <input
                                             type="password"
                                             className="form-control"
@@ -94,6 +124,7 @@ const Register = () => {
                                             }
                                             required
                                         />
+
                                         <label htmlFor="password">
                                             Password
                                         </label>
@@ -101,26 +132,42 @@ const Register = () => {
 
                                     <button
                                         type="submit"
-                                        className="btn btn-primary w-100"
+                                        className="btn btn-primary w-100 py-2 fw-semibold"
                                     >
-                                        Register
+                                        Create Account
                                     </button>
 
                                 </form>
 
-                                <div className="text-center mt-3">
-                                    Already have an account?{" "}
-                                    <NavLink to="/login">
+                                <div className="text-center mt-4">
+                                    <span className="text-muted">
+                                        Already have an account?{" "}
+                                    </span>
+
+                                    <NavLink
+                                        to="/login"
+                                        className="fw-semibold text-decoration-none"
+                                    >
                                         Login
                                     </NavLink>
                                 </div>
 
                             </div>
                         </div>
+
+                        <div className="text-center mt-4">
+                            <NavLink
+                                to="/"
+                                className="text-muted text-decoration-none"
+                            >
+                                ← Back to Courses
+                            </NavLink>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

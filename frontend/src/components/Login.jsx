@@ -8,37 +8,62 @@ const Login = () => {
         password: ""
     });
 
+    const [error, setError] = useState("");
+
     const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        axios
-            .post("http://localhost:4000/auth/login", user)
-            .then((res) => {
-                console.log(res.data);
+        setError("");
 
+        axios
+            .post(`${import.meta.env.VITE_API_URL}/auth/login`, user)
+            .then((res) => {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("user", JSON.stringify(res.data.user));
 
                 navigate("/");
             })
             .catch((err) => {
-                console.log(err);
+                setError(
+                    err.response?.data?.message || "Login failed"
+                );
             });
     };
 
     return (
-        <>
-            <div className="container my-5">
+        <div className="bg-light min-vh-100 d-flex align-items-center py-5">
+            <div className="container">
                 <div className="row justify-content-center">
-                    <div className="col-md-6">
-                        <div className="card">
-                            <div className="card-body">
+                    <div className="col-md-6 col-lg-5">
 
-                                <h4 className="card-title text-center mb-4">
-                                    Login
-                                </h4>
+                        <div className="text-center mb-4">
+                            <h2 className="fw-bold">
+                                CourseHub
+                            </h2>
+
+                            <p className="text-muted">
+                                Continue learning and build your skills
+                            </p>
+                        </div>
+
+                        <div className="card border-0 shadow-sm">
+                            <div className="card-body p-4 p-md-5">
+
+                                <h3 className="fw-bold mb-2">
+                                    Welcome back
+                                </h3>
+
+                                <p className="text-muted mb-4">
+                                    Sign in to continue to CourseHub.
+                                </p>
+
+                                {error && (
+                                    <div className="alert alert-danger">
+                                        {error}
+                                    </div>
+                                )}
 
                                 <form onSubmit={handleSubmit}>
 
@@ -57,12 +82,13 @@ const Login = () => {
                                             }
                                             required
                                         />
+
                                         <label htmlFor="email">
-                                            Email
+                                            Email Address
                                         </label>
                                     </div>
 
-                                    <div className="form-floating mb-3">
+                                    <div className="form-floating mb-2">
                                         <input
                                             type="password"
                                             className="form-control"
@@ -77,33 +103,59 @@ const Login = () => {
                                             }
                                             required
                                         />
+
                                         <label htmlFor="password">
                                             Password
                                         </label>
                                     </div>
 
+                                    <div className="text-end mb-4">
+                                        <NavLink
+                                            to="/forgot-password"
+                                            className="text-decoration-none"
+                                        >
+                                            Forgot Password?
+                                        </NavLink>
+                                    </div>
+
                                     <button
                                         type="submit"
-                                        className="btn btn-primary w-100"
+                                        className="btn btn-primary w-100 py-2 fw-semibold"
                                     >
                                         Login
                                     </button>
 
                                 </form>
 
-                                <div className="text-center mt-3">
-                                    Don't have an account?{" "}
-                                    <NavLink to="/register">
-                                        Register
+                                <div className="text-center mt-4">
+                                    <span className="text-muted">
+                                        Don't have an account?{" "}
+                                    </span>
+
+                                    <NavLink
+                                        to="/register"
+                                        className="fw-semibold text-decoration-none"
+                                    >
+                                        Create Account
                                     </NavLink>
                                 </div>
 
                             </div>
                         </div>
+
+                        <div className="text-center mt-4">
+                            <NavLink
+                                to="/"
+                                className="text-muted text-decoration-none"
+                            >
+                                Back to Courses
+                            </NavLink>
+                        </div>
+
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 

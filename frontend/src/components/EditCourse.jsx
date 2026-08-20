@@ -9,7 +9,11 @@ const EditCourse = () => {
     c_insturctor: "",
     c_category: "",
     c_dutration: "",
-    c_level: ""
+    c_level: "",
+    c_description: "",
+    c_price: "",
+    c_language: "",
+    c_lessons: ""
   });
 
   const { id } = useParams();
@@ -17,7 +21,7 @@ const EditCourse = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:4000/course/course/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/course/course/${id}`)
       .then((res) => setCourse(res.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -28,28 +32,28 @@ const EditCourse = () => {
     const token = localStorage.getItem("token");
 
     axios
-        .put(
-            `http://localhost:4000/course/${id}`,
-            course,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        )
-        .then(() => {
-            navigate(`/show/${id}`);
-        })
-        .catch((err) => {
-            if (err.response?.status === 401) {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                navigate("/login");
-            } else {
-                console.log(err);
-            }
-        });
-};
+      .put(
+        `${import.meta.env.VITE_API_URL}/course/${id}`,
+        course,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      .then(() => {
+        navigate(`/show/${id}`);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          navigate("/login");
+        } else {
+          console.log(err);
+        }
+      });
+  };
 
   return (
     <>
@@ -74,6 +78,7 @@ const EditCourse = () => {
                           c_name: e.target.value
                         })
                       }
+                      required
                     />
                     <label htmlFor="c_name">Course Name</label>
                   </div>
@@ -90,8 +95,9 @@ const EditCourse = () => {
                           c_thumbnail: e.target.value
                         })
                       }
+                      required
                     />
-                    <label htmlFor="c_thumbnail">Image</label>
+                    <label htmlFor="c_thumbnail">Thumbnail URL</label>
                   </div>
 
                   <div className="form-floating mb-3">
@@ -106,6 +112,7 @@ const EditCourse = () => {
                           c_insturctor: e.target.value
                         })
                       }
+                      required
                     />
                     <label htmlFor="c_insturctor">Instructor</label>
                   </div>
@@ -122,8 +129,29 @@ const EditCourse = () => {
                           c_category: e.target.value
                         })
                       }
+                      required
                     />
                     <label htmlFor="c_category">Category</label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <textarea
+                      className="form-control"
+                      id="c_description"
+                      placeholder=""
+                      style={{ height: "120px" }}
+                      value={course.c_description}
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          c_description: e.target.value
+                        })
+                      }
+                      required
+                    ></textarea>
+                    <label htmlFor="c_description">
+                      Course Description
+                    </label>
                   </div>
 
                   <div className="form-floating mb-3">
@@ -131,6 +159,7 @@ const EditCourse = () => {
                       type="number"
                       className="form-control"
                       id="c_dutration"
+                      min="1"
                       value={course.c_dutration}
                       onChange={(e) =>
                         setCourse({
@@ -138,8 +167,11 @@ const EditCourse = () => {
                           c_dutration: e.target.value
                         })
                       }
+                      required
                     />
-                    <label htmlFor="c_dutration">Duration</label>
+                    <label htmlFor="c_dutration">
+                      Duration (Hours)
+                    </label>
                   </div>
 
                   <div className="form-floating mb-3">
@@ -153,6 +185,7 @@ const EditCourse = () => {
                           c_level: e.target.value
                         })
                       }
+                      required
                     >
                       <option value="">Select Level</option>
                       <option value="Beginner">Beginner</option>
@@ -161,6 +194,61 @@ const EditCourse = () => {
                     </select>
 
                     <label htmlFor="c_level">Level</label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="c_price"
+                      min="0"
+                      value={course.c_price}
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          c_price: e.target.value
+                        })
+                      }
+                      required
+                    />
+                    <label htmlFor="c_price">Price (₹)</label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="c_language"
+                      value={course.c_language}
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          c_language: e.target.value
+                        })
+                      }
+                      required
+                    />
+                    <label htmlFor="c_language">Language</label>
+                  </div>
+
+                  <div className="form-floating mb-3">
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="c_lessons"
+                      min="1"
+                      value={course.c_lessons}
+                      onChange={(e) =>
+                        setCourse({
+                          ...course,
+                          c_lessons: e.target.value
+                        })
+                      }
+                      required
+                    />
+                    <label htmlFor="c_lessons">
+                      Number of Lessons
+                    </label>
                   </div>
 
                   <NavLink

@@ -35,90 +35,86 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
-        <div className="container">
+    <nav className="navbar navbar-dark bg-dark shadow-sm">
+      <div className="container">
 
-          <NavLink className="navbar-brand" to="/">
-            Course
-          </NavLink>
+        <NavLink
+          className="navbar-brand fw-bold fs-4"
+          to="/"
+        >
+           CourseHub
+        </NavLink>
 
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#collapsibleNavId"
-            aria-controls="collapsibleNavId"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+        <div className="d-flex align-items-center gap-3">
 
-          <div
-            className="collapse navbar-collapse"
-            id="collapsibleNavId"
-          >
+          <NavLink
+  className="nav-link text-white"
+  to="/"
+>
+  Courses
+</NavLink>
 
-            <ul className="navbar-nav me-auto mt-2 mt-lg-0">
 
-              <li className="nav-item">
-                <NavLink className="nav-link" to="/">
-                  Home
-                </NavLink>
-              </li>
 
-              {user?.role === "admin" && (
-                <li className="nav-item">
-                  <NavLink className="nav-link" to="/add">
-                    Add Course
-                  </NavLink>
-                </li>
+{user?.role === "admin" && (
+  <NavLink
+    className="nav-link text-white"
+    to="/add"
+  >
+    Add Course
+  </NavLink>
+)}
+
+{user && user.role !== "admin" && (
+    <NavLink
+        className="nav-link text-white"
+        to="/my-courses"
+    >
+        My Courses
+    </NavLink>
+)}
+
+
+          {!user ? (
+            <>
+              <NavLink
+                className="nav-link text-white"
+                to="/login"
+              >
+                Login
+              </NavLink>
+
+              <NavLink
+                className="btn btn-primary"
+                to="/register"
+              >
+                Sign Up
+              </NavLink>
+            </>
+          ) : (
+            <>
+              <span className="text-white">
+                Hi, <strong>{user.name}</strong>
+              </span>
+
+              {user.role === "admin" && (
+                <span className="badge bg-warning text-dark">
+                  Admin
+                </span>
               )}
 
-            </ul>
+              <button
+                className="btn btn-outline-light"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            </>
+          )}
 
-            <ul className="navbar-nav">
-
-              {!user ? (
-                <>
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/login">
-                      Login
-                    </NavLink>
-                  </li>
-
-                  <li className="nav-item">
-                    <NavLink className="nav-link" to="/register">
-                      Register
-                    </NavLink>
-                  </li>
-                </>
-              ) : (
-                <>
-                  <li className="nav-item">
-                    <span className="nav-link">
-                      {user.name}
-                    </span>
-                  </li>
-
-                  <li className="nav-item">
-                    <button
-                      className="btn btn-danger"
-                      onClick={handleLogout}
-                    >
-                      Logout
-                    </button>
-                  </li>
-                </>
-              )}
-
-            </ul>
-
-          </div>
         </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   );
 };
 
