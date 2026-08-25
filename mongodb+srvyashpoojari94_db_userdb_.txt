@@ -1,0 +1,9 @@
+mongodb+srv://yashpoojari94_db_user:<db_password>@cluster0.lcwgzxq.mongodb.net/?appName=Cluster0
+
+
+
+
+& "C:\Program Files\MongoDB\Tools\100\bin\mongorestore.exe" --uri="mongodb+srv://yashpoojari94_db_user:<db_password>@cluster0.lcwgzxq.mongodb.net/?appName=Cluster0
+" "./mongo-backup/i2_course"
+
+CourseHub2026Test

@@ -1,83 +1,104 @@
-import React from 'react'
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AddCourse from './components/AddCourse'
-import Home from './components/Home'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import NavBar from './components/NavBar'
-import ShowCourse from './components/ShowCourse';
-import EditCourse from './components/EditCourse';
-import Register from './components/Register';
-import Login from './components/Login';
+
+import AddCourse from "./components/AddCourse";
+import Home from "./components/Home";
+import "bootstrap/dist/css/bootstrap.min.css";
+import NavBar from "./components/NavBar";
+import ShowCourse from "./components/ShowCourse";
+import EditCourse from "./components/EditCourse";
+import Register from "./components/Register";
+import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ForgotPassword from './components/ForgotPassword';
-import ResetPassword from './components/ResetPassword';
+import ForgotPassword from "./components/ForgotPassword";
+import ResetPassword from "./components/ResetPassword";
 import MyCourses from "./components/MyCourses";
+import Footer from "./components/Footer";
+
 const App = () => {
-  return (
-    <>
-      <BrowserRouter>
-      <NavBar/>
-      <Routes>
+    return (
+        <BrowserRouter>
 
-    <Route path="/" element={<Home />} />
+            <div className="d-flex flex-column min-vh-100">
 
-    <Route
-        path="/register"
-        element={<Register />}
-    />
+                <NavBar />
 
-    <Route
-        path="/login"
-        element={<Login />}
-    />
+                <main className="flex-grow-1">
 
-    <Route
-        path="/show/:id"
-        element={<ShowCourse />}
-    />
+                    <Routes>
 
-    <Route
-        path="/add"
-        element={
-            <ProtectedRoute adminOnly={true}>
-                <AddCourse />
-            </ProtectedRoute>
-        }
-    />
+                        <Route
+                            path="/"
+                            element={<Home />}
+                        />
 
-    <Route
-        path="/edit/:id"
-        element={
-            <ProtectedRoute adminOnly={true}>
-                <EditCourse />
-            </ProtectedRoute>
-        }
-    />
-  <Route
-    path="/edit"
-    element={<Navigate to="/" />}
-/>  
-<Route
-    path="/forgot-password"
-    element={<ForgotPassword />}
-/>
-<Route
-    path="/reset-password/:token"
-    element={<ResetPassword />}
-/>
-<Route
-    path="/my-courses"
-    element={
-        <ProtectedRoute userOnly={true}>
-            <MyCourses />
-        </ProtectedRoute>
-    }
-/>
-  </Routes>
-      </BrowserRouter>
-    </>
-    
-  )
-}
+                        <Route
+                            path="/register"
+                            element={<Register />}
+                        />
 
-export default App
+                        <Route
+                            path="/login"
+                            element={<Login />}
+                        />
+
+                        <Route
+                            path="/show/:id"
+                            element={<ShowCourse />}
+                        />
+
+                        <Route
+                            path="/add"
+                            element={
+                                <ProtectedRoute adminOnly={true}>
+                                    <AddCourse />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/edit/:id"
+                            element={
+                                <ProtectedRoute adminOnly={true}>
+                                    <EditCourse />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        <Route
+                            path="/edit"
+                            element={<Navigate to="/" />}
+                        />
+
+                        <Route
+                            path="/forgot-password"
+                            element={<ForgotPassword />}
+                        />
+
+                        <Route
+                            path="/reset-password/:token"
+                            element={<ResetPassword />}
+                        />
+
+                        <Route
+                            path="/my-courses"
+                            element={
+                                <ProtectedRoute userOnly={true}>
+                                    <MyCourses />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                    </Routes>
+
+                </main>
+
+                <Footer />
+
+            </div>
+
+        </BrowserRouter>
+    );
+};
+
+export default App;
